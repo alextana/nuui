@@ -17,21 +17,12 @@
 
 <script setup lang="ts">
 import { ref, toRef, onMounted, onUnmounted, watch } from 'vue'
-import type { TabsVariant, TabsSize, TabsTheme } from './theme'
+import type { TabListProps } from './types'
 import { useTabIndicator } from './composables/useTabIndicator'
 import { useTabKeyboardNavigation } from './composables/useTabKeyboardNavigation'
 import { useTabListTheme } from './composables/useTabListTheme'
 
-interface TabListProps {
-  activeTab: string
-  setActiveTab: (value: string) => void
-  variant?: TabsVariant
-  size?: TabsSize
-  orientation?: 'horizontal' | 'vertical'
-  customClasses?: string
-  theme?: TabsTheme
-  animated?: boolean
-}
+// TabListProps interface is now imported from types.ts
 
 const {
   activeTab,

@@ -7,7 +7,7 @@ import Tab from './Tab.vue'
 import TabPanel from './TabPanel.vue'
 
 const meta: Meta<typeof Tabs> = {
-  title: 'Components/Tabs',
+  title: 'UI/Misc/Tabs',
   component: Tabs,
   parameters: {
     layout: 'padded',
@@ -204,16 +204,16 @@ export const Controlled: Story = {
     components: { Tabs },
     setup() {
       const activeTab = ref('overview')
-      
+
       const handleTabChange = (value: string) => {
         console.log('Tab changed to:', value)
         activeTab.value = value
       }
-      
+
       const switchToDetails = () => {
         activeTab.value = 'details'
       }
-      
+
       return {
         activeTab,
         sampleTabs,
@@ -224,17 +224,17 @@ export const Controlled: Story = {
     template: `
       <div class="space-y-4">
         <div>
-          <button 
-            @click="switchToDetails" 
+          <button
+            @click="switchToDetails"
             class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Switch to Details Tab
           </button>
           <p class="text-sm text-gray-600 mt-2">Active tab: {{ activeTab }}</p>
         </div>
-        <Tabs 
-          v-model="activeTab" 
-          :tabs="sampleTabs" 
+        <Tabs
+          v-model="activeTab"
+          :tabs="sampleTabs"
           @change="handleTabChange"
         />
       </div>
@@ -252,9 +252,9 @@ export const SeparateComponents: Story = {
     template: `
       <TabGroup v-model="activeTab" default-value="overview" variant="pills">
         <template #default="{ activeTab: currentTab, setActiveTab, variant, size, orientation, theme, animated, hasBeenActive, navigationDirection }">
-          <TabList 
-            :variant="variant" 
-            :size="size" 
+          <TabList
+            :variant="variant"
+            :size="size"
             :orientation="orientation"
             :theme="theme"
             :animated="animated"
@@ -262,9 +262,9 @@ export const SeparateComponents: Story = {
             :set-active-tab="setActiveTab"
             class="mb-6"
           >
-            <Tab 
-              value="overview" 
-              label="Overview" 
+            <Tab
+              value="overview"
+              label="Overview"
               :active-tab="currentTab"
               :variant="variant"
               :size="size"
@@ -273,9 +273,9 @@ export const SeparateComponents: Story = {
               :animated="animated"
               :set-active-tab="setActiveTab"
             />
-            <Tab 
-              value="details" 
-              label="Details" 
+            <Tab
+              value="details"
+              label="Details"
               :active-tab="currentTab"
               :variant="variant"
               :size="size"
@@ -284,9 +284,9 @@ export const SeparateComponents: Story = {
               :animated="animated"
               :set-active-tab="setActiveTab"
             />
-            <Tab 
-              value="settings" 
-              label="Settings" 
+            <Tab
+              value="settings"
+              label="Settings"
               :active-tab="currentTab"
               :variant="variant"
               :size="size"
@@ -296,9 +296,9 @@ export const SeparateComponents: Story = {
               :set-active-tab="setActiveTab"
             />
           </TabList>
-          
+
           <div class="mt-4">
-            <TabPanel 
+            <TabPanel
               value="overview"
               :active-tab="currentTab"
               :variant="variant"
@@ -312,8 +312,8 @@ export const SeparateComponents: Story = {
               <h3 class="text-lg font-semibold mb-2">Overview Panel</h3>
               <p>This demonstrates using the tab components separately for more control over layout.</p>
             </TabPanel>
-            
-            <TabPanel 
+
+            <TabPanel
               value="details"
               :active-tab="currentTab"
               :variant="variant"
@@ -327,8 +327,8 @@ export const SeparateComponents: Story = {
               <h3 class="text-lg font-semibold mb-2">Details Panel</h3>
               <p>You can place panels anywhere in your layout, not just directly after the tabs.</p>
             </TabPanel>
-            
-            <TabPanel 
+
+            <TabPanel
               value="settings"
               :active-tab="currentTab"
               :variant="variant"

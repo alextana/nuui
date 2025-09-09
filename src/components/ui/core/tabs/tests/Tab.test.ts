@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { markRaw } from 'vue'
-import Tab from './Tab.vue'
+import Tab from '../Tab.vue'
 
 // Mock icon component
 const MockIcon = markRaw({
@@ -14,16 +14,16 @@ describe('Tab', () => {
   const mockUnregisterTab = vi.fn()
 
   const defaultProps = {
-    value: 'tab1',
-    activeTab: 'tab1',
-    setActiveTab: mockSetActiveTab,
-    variant: 'default',
-    size: 'md',
-    orientation: 'horizontal' as const,
-    animated: true,
-    registerTab: mockRegisterTab,
-    unregisterTab: mockUnregisterTab
-  }
+  value: 'tab1',
+  activeTab: 'tab1',
+  setActiveTab: mockSetActiveTab,
+  variant: 'default' as const,
+  size: 'md' as const,
+  orientation: 'horizontal' as const,
+  animated: true,
+  registerTab: mockRegisterTab,
+  unregisterTab: mockUnregisterTab
+}
 
   const createWrapper = (props = {}, activeTab = 'tab1') => {
     return mount(Tab, {
@@ -43,7 +43,7 @@ describe('Tab', () => {
   describe('Basic Rendering', () => {
     it('renders correctly with basic props', () => {
       const wrapper = createWrapper()
-      
+
       expect(wrapper.find('[role="tab"]').exists()).toBe(true)
       expect(wrapper.text()).toBe('Test Tab')
       expect(wrapper.attributes('id')).toBe('tab-tab1')
@@ -62,7 +62,7 @@ describe('Tab', () => {
           default: 'Slot Content'
         }
       })
-      
+
       expect(wrapper.text()).toBe('Slot Content')
     })
   })

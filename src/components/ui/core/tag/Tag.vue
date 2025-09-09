@@ -12,6 +12,8 @@
     @mousedown="handleMouseDown"
     @mouseup="handleMouseUp"
     @mouseleave="handleMouseLeave"
+    @focus="handleFocus"
+    @blur="handleBlur"
   >
     <span :class="contentClasses">
       <!-- Left Icon Slot or Prop -->
@@ -39,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useAttrs, ref, type Component } from 'vue';
+import { computed, useAttrs, ref, onMounted, onUnmounted, type Component } from 'vue';
 import { twMerge } from 'tailwind-merge';
 import {
   mergeTagTheme,
@@ -97,10 +99,44 @@ const isClickable = computed(() => {
 // Pressed state for keyboard and mouse interactions
 const isPressed = ref(false);
 
+// Keyboard focus detection
+const isKeyboardFocused = ref(false);
+let isUsingKeyboard = false;
+
+// Track keyboard usage globally
+const handleKeyDown = () => {
+  isUsingKeyboard = true;
+};
+
+const handleGlobalMouseDown = () => {
+  isUsingKeyboard = false;
+};
+
+const handleFocus = () => {
+  isKeyboardFocused.value = isUsingKeyboard;
+};
+
+const handleBlur = () => {
+  isKeyboardFocused.value = false;
+};
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('mousedown', handleGlobalMouseDown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyDown);
+  document.removeEventListener('mousedown', handleGlobalMouseDown);
+});
+
 // Computed classes
 const tagClasses = computed(() => {
   const theme = mergedTheme.value;
-  const baseClasses = theme.root.base;
+  
+  // Base classes without focus styles
+  const baseWithoutFocus = theme.root.base.replace(/focus:outline-none focus:ring-2 focus:ring-offset-2/g, '');
+  
   const variantClasses = isClickable.value
     ? theme.root.variants[variant]
     : theme.static.variants[variant];
@@ -108,12 +144,37 @@ const tagClasses = computed(() => {
 
   // Add pressed state classes when isPressed is true
   const pressedClasses = isPressed.value && isClickable.value ? getPressedClasses(variant) : '';
+  
+  // Conditional focus styles - only show when keyboard focused
+  const focusStyles = isKeyboardFocused.value ? 'outline-none ring-2 ring-offset-2' : 'focus:outline-none';
+  
+  // Get focus ring color from variant
+  const getFocusRingColor = () => {
+    if (!isClickable.value) return '';
+    const variantClass = variantClasses;
+    if (variantClass.includes('focus:ring-gray-400')) return 'ring-gray-400';
+    if (variantClass.includes('focus:ring-green-400')) return 'ring-green-400';
+    if (variantClass.includes('focus:ring-blue-400')) return 'ring-blue-400';
+    if (variantClass.includes('focus:ring-yellow-400')) return 'ring-yellow-400';
+    if (variantClass.includes('focus:ring-red-400')) return 'ring-red-400';
+    if (variantClass.includes('focus:ring-orange-400')) return 'ring-orange-400';
+    return 'ring-gray-400'; // default
+  };
+  
+  const focusRingColor = isKeyboardFocused.value ? getFocusRingColor() : '';
+  
+  // Remove focus ring from variant classes
+  const cleanVariantClasses = isClickable.value 
+    ? variantClasses.replace(/focus:ring-\w+-\d+/g, '')
+    : variantClasses;
 
   return twMerge(
-    baseClasses,
-    variantClasses,
+    baseWithoutFocus,
+    cleanVariantClasses,
     sizeClasses,
     'rounded-full',
+    focusStyles,
+    focusRingColor,
     pressedClasses,
     customClasses
   );

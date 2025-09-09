@@ -11,9 +11,9 @@ export const defaultTabsTheme = {
       cards: 'border-b border-gray-200 bg-gray-50'
     },
     sizes: {
-      sm: 'text-sm',
-      md: 'text-base',
-      lg: 'text-lg'
+      sm: 'text-sm gap-1',
+      md: 'text-base gap-2',
+      lg: 'text-lg gap-3'
     }
   },
   tab: {

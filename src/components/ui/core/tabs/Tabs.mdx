@@ -1,321 +1,82 @@
-import { Meta, Story, Canvas, Controls, ArgTypes } from '@storybook/addon-docs/blocks'
-import { Tabs, TabList, Tab, TabPanel } from './index'
-import * as TabStories from './Tabs.stories';
+import { Canvas, Meta } from '@storybook/addon-docs/blocks'
+import * as TabsStories from './Tabs.stories'
 
-<Meta title="Components/Tabs" of={TabStories}/>
+<Meta of={TabsStories} />
 
 # Tabs
 
-A flexible and accessible tabs component with multiple variants, keyboard navigation, and smooth animations.
+A flexible and accessible tabs component system that supports various styles, layouts, and usage patterns. The tabs component provides both a simple unified interface and individual components for maximum flexibility.
 
 ## Features
 
-- **Accessible**: Full keyboard navigation with arrow keys, Home, and End
-- **Flexible**: Multiple variants (default, underline, pills) and orientations
-- **Animated**: Smooth indicator transitions and panel animations
-- **Customizable**: Extensive theming and styling options
-- **TypeScript**: Full type safety and IntelliSense support
+- **Multiple Variants**: Default, underline, pills, and cards styles
+- **Flexible Sizing**: Small, medium, and large sizes
+- **Orientation Support**: Horizontal and vertical layouts
+- **Animation Control**: Enable or disable animations for performance or accessibility
+- **Keyboard Navigation**: Full keyboard support with arrow keys, Home, and End
+- **Accessibility**: ARIA compliant with proper focus management
+- **Lazy Loading**: Optional lazy loading of tab panels
+- **Controlled/Uncontrolled**: Support for both controlled and uncontrolled usage
+- **Custom Styling**: Extensive customization options
+- **TypeScript**: Full TypeScript support with proper type definitions
 
 ## Basic Usage
 
-<Canvas sourceState="shown">
-  <Story name="Default">
-    <Tabs defaultActiveTab="tab1">
-      <TabList>
-        <Tab value="tab1">Home</Tab>
-        <Tab value="tab2">About</Tab>
-        <Tab value="tab3">Contact</Tab>
-      </TabList>
-      <TabPanel value="tab1">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Welcome Home</h3>
-          <p>This is the home tab content with some example text.</p>
-        </div>
-      </TabPanel>
-      <TabPanel value="tab2">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">About Us</h3>
-          <p>Learn more about our company and mission.</p>
-        </div>
-      </TabPanel>
-      <TabPanel value="tab3">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Get in Touch</h3>
-          <p>Contact us for more information.</p>
-        </div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
+<Canvas of={TabsStories.Default} sourceState="shown" />
 
 ## Variants
 
 ### Default Variant
-The default variant with a subtle background indicator.
 
-<Canvas sourceState="shown">
-  <Story name="Default Variant">
-    <Tabs defaultActiveTab="home" variant="default">
-      <TabList>
-        <Tab value="home">Home</Tab>
-        <Tab value="products">Products</Tab>
-        <Tab value="services">Services</Tab>
-      </TabList>
-      <TabPanel value="home">
-        <div className="p-4">Home content</div>
-      </TabPanel>
-      <TabPanel value="products">
-        <div className="p-4">Products content</div>
-      </TabPanel>
-      <TabPanel value="services">
-        <div className="p-4">Services content</div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
+<Canvas of={TabsStories.Default} sourceState="shown" />
 
 ### Underline Variant
-A clean underline style perfect for navigation.
 
-<Canvas sourceState="shown">
-  <Story name="Underline Variant">
-    <Tabs defaultActiveTab="dashboard" variant="underline">
-      <TabList>
-        <Tab value="dashboard">Dashboard</Tab>
-        <Tab value="analytics">Analytics</Tab>
-        <Tab value="reports">Reports</Tab>
-        <Tab value="settings">Settings</Tab>
-      </TabList>
-      <TabPanel value="dashboard">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Dashboard</h3>
-          <p>Overview of your key metrics and data.</p>
-        </div>
-      </TabPanel>
-      <TabPanel value="analytics">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Analytics</h3>
-          <p>Detailed analytics and insights.</p>
-        </div>
-      </TabPanel>
-      <TabPanel value="reports">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Reports</h3>
-          <p>Generate and view reports.</p>
-        </div>
-      </TabPanel>
-      <TabPanel value="settings">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Settings</h3>
-          <p>Configure your preferences.</p>
-        </div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
+<Canvas of={TabsStories.Underline} sourceState="shown" />
 
 ### Pills Variant
-Rounded pill-style tabs for a modern look.
 
-<Canvas sourceState="shown">
-  <Story name="Pills Variant">
-    <Tabs defaultActiveTab="overview" variant="pills">
-      <TabList>
-        <Tab value="overview">Overview</Tab>
-        <Tab value="features">Features</Tab>
-        <Tab value="pricing">Pricing</Tab>
-      </TabList>
-      <TabPanel value="overview">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Overview</h3>
-          <p>Get started with our platform.</p>
-        </div>
-      </TabPanel>
-      <TabPanel value="features">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Features</h3>
-          <p>Explore all the amazing features we offer.</p>
-        </div>
-      </TabPanel>
-      <TabPanel value="pricing">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-2">Pricing</h3>
-          <p>Choose the plan that works for you.</p>
-        </div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
+<Canvas of={TabsStories.Pills} sourceState="shown" />
+
+### Cards Variant
+
+<Canvas of={TabsStories.Cards} sourceState="shown" />
 
 ## Sizes
 
-### Small Size
-<Canvas sourceState="shown">
-  <Story name="Small Size">
-    <Tabs defaultActiveTab="tab1" size="sm">
-      <TabList>
-        <Tab value="tab1">Small</Tab>
-        <Tab value="tab2">Tabs</Tab>
-        <Tab value="tab3">Example</Tab>
-      </TabList>
-      <TabPanel value="tab1">
-        <div className="p-3">Small tab content</div>
-      </TabPanel>
-      <TabPanel value="tab2">
-        <div className="p-3">More small content</div>
-      </TabPanel>
-      <TabPanel value="tab3">
-        <div className="p-3">Even more content</div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
+<Canvas of={TabsStories.Sizes} sourceState="shown" />
 
-### Large Size
-<Canvas sourceState="shown">
-  <Story name="Large Size">
-    <Tabs defaultActiveTab="tab1" size="lg">
-      <TabList>
-        <Tab value="tab1">Large</Tab>
-        <Tab value="tab2">Tabs</Tab>
-        <Tab value="tab3">Example</Tab>
-      </TabList>
-      <TabPanel value="tab1">
-        <div className="p-6">Large tab content with more spacing</div>
-      </TabPanel>
-      <TabPanel value="tab2">
-        <div className="p-6">More large content</div>
-      </TabPanel>
-      <TabPanel value="tab3">
-        <div className="p-6">Even more content</div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
+## With Icons and Badges
+
+<Canvas of={TabsStories.WithIcons} sourceState="shown" />
 
 ## Orientation
 
 ### Vertical Orientation
-Tabs can be displayed vertically for sidebar-style navigation.
 
-<Canvas sourceState="shown">
-  <Story name="Vertical Orientation">
-    <div className="flex h-64">
-      <Tabs defaultActiveTab="profile" orientation="vertical" className="flex">
-        <TabList className="w-48">
-          <Tab value="profile">Profile</Tab>
-          <Tab value="account">Account</Tab>
-          <Tab value="security">Security</Tab>
-          <Tab value="notifications">Notifications</Tab>
-        </TabList>
-        <div className="flex-1">
-          <TabPanel value="profile">
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">Profile Settings</h3>
-              <p>Manage your profile information and preferences.</p>
-            </div>
-          </TabPanel>
-          <TabPanel value="account">
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">Account Settings</h3>
-              <p>Update your account details and billing information.</p>
-            </div>
-          </TabPanel>
-          <TabPanel value="security">
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">Security Settings</h3>
-              <p>Configure your security preferences and two-factor authentication.</p>
-            </div>
-          </TabPanel>
-          <TabPanel value="notifications">
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">Notification Settings</h3>
-              <p>Choose how and when you want to receive notifications.</p>
-            </div>
-          </TabPanel>
-        </div>
-      </Tabs>
-    </div>
-  </Story>
-</Canvas>
+<Canvas of={TabsStories.Vertical} sourceState="shown" />
 
-## Animations
+## Lazy Loading
 
-### With Animations (Default)
-<Canvas sourceState="shown">
-  <Story name="Animated">
-    <Tabs defaultActiveTab="tab1" animated={true}>
-      <TabList>
-        <Tab value="tab1">Smooth</Tab>
-        <Tab value="tab2">Animated</Tab>
-        <Tab value="tab3">Transitions</Tab>
-      </TabList>
-      <TabPanel value="tab1">
-        <div className="p-4">Watch the smooth indicator animation!</div>
-      </TabPanel>
-      <TabPanel value="tab2">
-        <div className="p-4">Panels also animate smoothly.</div>
-      </TabPanel>
-      <TabPanel value="tab3">
-        <div className="p-4">Beautiful transitions enhance UX.</div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
-
-### Without Animations
-<Canvas sourceState="shown">
-  <Story name="No Animation">
-    <Tabs defaultActiveTab="tab1" animated={false}>
-      <TabList>
-        <Tab value="tab1">Instant</Tab>
-        <Tab value="tab2">No Animation</Tab>
-        <Tab value="tab3">Fast</Tab>
-      </TabList>
-      <TabPanel value="tab1">
-        <div className="p-4">Instant switching for performance-critical apps.</div>
-      </TabPanel>
-      <TabPanel value="tab2">
-        <div className="p-4">No animations for reduced motion preferences.</div>
-      </TabPanel>
-      <TabPanel value="tab3">
-        <div className="p-4">Fast and efficient.</div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
+<Canvas of={TabsStories.LazyLoading} sourceState="shown" />
 
 ## Controlled Usage
 
-For more control over the tab state, you can use the controlled version:
+<Canvas of={TabsStories.Controlled} sourceState="shown" />
 
-```tsx
-import { useState } from 'react'
-import { Tabs, TabList, Tab, TabPanel } from 'nuui'
+## Separate Components
 
-function ControlledTabs() {
-  const [activeTab, setActiveTab] = useState('tab1')
+For maximum flexibility, you can use the individual tab components separately:
 
-  return (
-    <Tabs activeTab={activeTab} onTabChange={setActiveTab}>
-      <TabList>
-        <Tab value="tab1">Tab 1</Tab>
-        <Tab value="tab2">Tab 2</Tab>
-        <Tab value="tab3">Tab 3</Tab>
-      </TabList>
-      <TabPanel value="tab1">
-        <div>Content for tab 1</div>
-      </TabPanel>
-      <TabPanel value="tab2">
-        <div>Content for tab 2</div>
-      </TabPanel>
-      <TabPanel value="tab3">
-        <div>Content for tab 3</div>
-      </TabPanel>
-    </Tabs>
-  )
-}
-```
+<Canvas of={TabsStories.SeparateComponents} sourceState="shown" />
+
+## Animation Control
+
+<Canvas of={TabsStories.AnimationControl} sourceState="shown" />
+
+## Custom Styling
+
+<Canvas of={TabsStories.CustomStyling} sourceState="shown" />
 
 ## Keyboard Navigation
 
@@ -334,177 +95,3 @@ The Tabs component supports full keyboard navigation:
 - Focus management and visual focus indicators
 - Screen reader friendly with proper labeling
 - Supports `prefers-reduced-motion` for animations
-
-## API Reference
-
-<ArgTypes of={TabStories} />
-
-## Examples
-
-### E-commerce Product Tabs
-<Canvas sourceState="shown">
-  <Story name="Product Tabs">
-    <Tabs defaultActiveTab="description" variant="underline">
-      <TabList>
-        <Tab value="description">Description</Tab>
-        <Tab value="specifications">Specifications</Tab>
-        <Tab value="reviews">Reviews (24)</Tab>
-        <Tab value="shipping">Shipping</Tab>
-      </TabList>
-      <TabPanel value="description">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-3">Product Description</h3>
-          <p className="text-gray-600 mb-4">
-            This premium product offers exceptional quality and performance.
-            Crafted with attention to detail and built to last.
-          </p>
-          <ul className="list-disc list-inside space-y-1 text-gray-600">
-            <li>High-quality materials</li>
-            <li>Durable construction</li>
-            <li>Modern design</li>
-            <li>Easy to use</li>
-          </ul>
-        </div>
-      </TabPanel>
-      <TabPanel value="specifications">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-3">Technical Specifications</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <dt className="font-medium">Dimensions</dt>
-              <dd className="text-gray-600">10" x 8" x 2"</dd>
-            </div>
-            <div>
-              <dt className="font-medium">Weight</dt>
-              <dd className="text-gray-600">2.5 lbs</dd>
-            </div>
-            <div>
-              <dt className="font-medium">Material</dt>
-              <dd className="text-gray-600">Premium aluminum</dd>
-            </div>
-            <div>
-              <dt className="font-medium">Color</dt>
-              <dd className="text-gray-600">Space Gray</dd>
-            </div>
-          </div>
-        </div>
-      </TabPanel>
-      <TabPanel value="reviews">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-3">Customer Reviews</h3>
-          <div className="space-y-4">
-            <div className="border-b pb-4">
-              <div className="flex items-center mb-2">
-                <span className="font-medium">John D.</span>
-                <span className="ml-2 text-yellow-500">★★★★★</span>
-              </div>
-              <p className="text-gray-600">Excellent product! Exactly as described.</p>
-            </div>
-            <div className="border-b pb-4">
-              <div className="flex items-center mb-2">
-                <span className="font-medium">Sarah M.</span>
-                <span className="ml-2 text-yellow-500">★★★★☆</span>
-              </div>
-              <p className="text-gray-600">Great quality, fast shipping.</p>
-            </div>
-          </div>
-        </div>
-      </TabPanel>
-      <TabPanel value="shipping">
-        <div className="p-4">
-          <h3 className="text-lg font-semibold mb-3">Shipping Information</h3>
-          <div className="space-y-3">
-            <div>
-              <dt className="font-medium">Standard Shipping</dt>
-              <dd className="text-gray-600">5-7 business days - Free</dd>
-            </div>
-            <div>
-              <dt className="font-medium">Express Shipping</dt>
-              <dd className="text-gray-600">2-3 business days - $9.99</dd>
-            </div>
-            <div>
-              <dt className="font-medium">Overnight</dt>
-              <dd className="text-gray-600">Next business day - $19.99</dd>
-            </div>
-          </div>
-        </div>
-      </TabPanel>
-    </Tabs>
-  </Story>
-</Canvas>
-
-### Settings Dashboard
-<Canvas sourceState="shown">
-  <Story name="Settings Dashboard">
-    <div className="max-w-4xl">
-      <Tabs defaultActiveTab="general" orientation="vertical" className="flex">
-        <TabList className="w-56 mr-6">
-          <Tab value="general">General</Tab>
-          <Tab value="appearance">Appearance</Tab>
-          <Tab value="privacy">Privacy</Tab>
-          <Tab value="integrations">Integrations</Tab>
-          <Tab value="billing">Billing</Tab>
-        </TabList>
-        <div className="flex-1">
-          <TabPanel value="general">
-            <div className="p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">General Settings</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Display Name</label>
-                  <input type="text" className="w-full p-2 border rounded" defaultValue="John Doe" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
-                  <input type="email" className="w-full p-2 border rounded" defaultValue="john@example.com" />
-                </div>
-              </div>
-            </div>
-          </TabPanel>
-          <TabPanel value="appearance">
-            <div className="p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">Appearance</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Theme</label>
-                  <select className="w-full p-2 border rounded">
-                    <option>Light</option>
-                    <option>Dark</option>
-                    <option>System</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </TabPanel>
-          <TabPanel value="privacy">
-            <div className="p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">Privacy Settings</h3>
-              <div className="space-y-4">
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2" defaultChecked />
-                  Allow analytics tracking
-                </label>
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2" />
-                  Share usage data
-                </label>
-              </div>
-            </div>
-          </TabPanel>
-          <TabPanel value="integrations">
-            <div className="p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">Integrations</h3>
-              <p className="text-gray-600">Connect your favorite tools and services.</p>
-            </div>
-          </TabPanel>
-          <TabPanel value="billing">
-            <div className="p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">Billing</h3>
-              <p className="text-gray-600">Manage your subscription and payment methods.</p>
-            </div>
-          </TabPanel>
-        </div>
-      </Tabs>
-    </div>
-  </Story>
-</Canvas>

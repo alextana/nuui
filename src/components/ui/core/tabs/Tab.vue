@@ -19,7 +19,8 @@
     <!-- Left icon slot or prop -->
     <span v-if="leftIcon || $slots.iconLeft" :class="leftIconClasses">
       <slot name="iconLeft">
-        <component v-if="leftIcon" :is="markRaw(leftIcon)" />
+        <component v-if="leftIcon && typeof leftIcon === 'object'" :is="markRaw(leftIcon)" />
+        <span v-else-if="leftIcon && typeof leftIcon === 'string'" v-html="leftIcon" />
       </slot>
     </span>
 
@@ -33,7 +34,8 @@
     <!-- Right icon slot or prop -->
     <span v-if="rightIcon || $slots.iconRight" :class="rightIconClasses">
       <slot name="iconRight">
-        <component v-if="rightIcon" :is="markRaw(rightIcon)" />
+        <component v-if="rightIcon && typeof rightIcon === 'object'" :is="markRaw(rightIcon)" />
+        <span v-else-if="rightIcon && typeof rightIcon === 'string'" v-html="rightIcon" />
       </slot>
     </span>
 
@@ -49,35 +51,22 @@
 <script setup lang="ts">
 import { computed, markRaw, ref, onMounted, onUnmounted, useId } from 'vue'
 import { twMerge } from 'tailwind-merge'
+import { mergeTabsTheme } from './theme'
+import type { TabProps, TabEmits } from './types/tabs'
 
 // Animation state
 const tabRef = ref<HTMLButtonElement>()
 const isPressed = ref(false)
 
-interface TabProps {
-  value: string
-  activeTab: string
-  setActiveTab: (value: string) => void
-  variant?: string
-  size?: string
-  orientation?: 'horizontal' | 'vertical'
-  animated?: boolean
-  registerTab?: (value: string, tabId: string) => void
-  unregisterTab?: (value: string) => void
-  label?: string
-  disabled?: boolean
-  leftIcon?: any
-  rightIcon?: any
-  badge?: string | number
-  customClasses?: string
-}
-
 const {
   value,
   activeTab,
   setActiveTab,
+  variant = 'default',
+  size = 'md',
   orientation = 'horizontal',
   animated = true,
+  theme = {},
   registerTab,
   unregisterTab,
   label = '',
@@ -88,10 +77,7 @@ const {
   customClasses = ''
 } = defineProps<TabProps>()
 
-const emit = defineEmits<{
-  click: [value: string, event: MouseEvent]
-  keydown: [value: string, event: KeyboardEvent]
-}>()
+const emit = defineEmits<TabEmits>()
 
 // Tab context is now passed as props
 
@@ -111,24 +97,16 @@ const tabId = computed(() => `tab-${value}`)
 const panelId = computed(() => `panel-${value}`)
 
 const tabClasses = computed(() => {
-  const theme = {
-    tab: {
-      base: 'inline-flex items-center justify-center px-4 py-2 font-medium transition-all duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed',
-      variants: {
-        default: {
-          inactive: 'text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300',
-          active: 'text-blue-600 border-b-2 border-blue-600'
-        }
-      },
-      sizes: {
-        md: 'px-4 py-2 text-base'
-      }
-    }
-  }
+  const mergedTheme = mergeTabsTheme(theme)
 
-  let variantClasses = isActive.value
-    ? theme.tab.variants.default.active
-    : theme.tab.variants.default.inactive
+  const variantConfig = mergedTheme.tab.variants[variant as keyof typeof mergedTheme.tab.variants]
+  let variantClasses = ''
+
+  if (variantConfig) {
+    variantClasses = isActive.value
+      ? variantConfig.active
+      : variantConfig.inactive
+  }
 
   // Replace border classes based on orientation
   if (orientation === 'vertical') {
@@ -138,10 +116,11 @@ const tabClasses = computed(() => {
   }
 
   const disabledClass = disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
+  const sizeClasses = mergedTheme.tab.sizes[size as keyof typeof mergedTheme.tab.sizes] || mergedTheme.tab.sizes.md
 
   return twMerge(
-    theme.tab.base,
-    theme.tab.sizes.md,
+    mergedTheme.tab.base,
+    sizeClasses,
     variantClasses,
     disabledClass,
     customClasses,

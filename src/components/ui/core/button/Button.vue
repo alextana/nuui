@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { useSlots, computed, markRaw, ref, reactive, nextTick } from 'vue'
+import { useSlots, computed, markRaw, ref, nextTick, onMounted, onUnmounted } from 'vue'
 import { twMerge } from 'tailwind-merge'
 import { mergeButtonTheme, type ButtonVariant, type ButtonSize, type ButtonRounded, type ButtonTheme } from './theme'
 
@@ -73,6 +73,45 @@ interface Ripple {
 const ripples = ref<Ripple[]>([])
 let rippleId = 0
 let isPressed = ref(false)
+
+// Keyboard focus detection
+const isKeyboardFocused = ref(false)
+let isUsingKeyboard = false
+
+// Track keyboard usage globally
+const handleKeyDown = () => {
+  isUsingKeyboard = true
+}
+
+const handleGlobalMouseDown = () => {
+  isUsingKeyboard = false
+}
+
+const handleFocus = () => {
+  isKeyboardFocused.value = isUsingKeyboard
+}
+
+const handleBlur = () => {
+  isKeyboardFocused.value = false
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyDown)
+  document.addEventListener('mousedown', handleGlobalMouseDown)
+  if (buttonRef.value) {
+    buttonRef.value.addEventListener('focus', handleFocus)
+    buttonRef.value.addEventListener('blur', handleBlur)
+  }
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyDown)
+  document.removeEventListener('mousedown', handleGlobalMouseDown)
+  if (buttonRef.value) {
+    buttonRef.value.removeEventListener('focus', handleFocus)
+    buttonRef.value.removeEventListener('blur', handleBlur)
+  }
+})
 
 interface ButtonProps {
   variant?: ButtonVariant
@@ -118,13 +157,34 @@ const buttonClasses = computed(() => {
   const theme = mergedTheme.value
   const sizeClass = iconOnly ? theme.root.iconOnlySizes[size] : theme.root.sizes[size]
   const widthClass = fullWidth ? 'w-full' : ''
+  
+  // Base classes without focus styles
+  const baseWithoutFocus = theme.root.base.replace(/focus:outline-none focus:ring-2 focus:ring-offset-2/g, '')
+  
+  // Conditional focus styles - only show when keyboard focused
+  const focusStyles = isKeyboardFocused.value ? 'outline-none ring-2 ring-offset-2' : 'focus:outline-none'
+  
+  // Get focus ring color from variant
+  const getFocusRingColor = () => {
+    const variantClass = theme.root.variants[variant]
+    if (variantClass.includes('focus:ring-blue-500')) return 'ring-blue-500'
+    if (variantClass.includes('focus:ring-gray-500')) return 'ring-gray-500'
+    if (variantClass.includes('focus:ring-red-500')) return 'ring-red-500'
+    if (variantClass.includes('focus:ring-green-500')) return 'ring-green-500'
+    if (variantClass.includes('focus:ring-yellow-500')) return 'ring-yellow-500'
+    return 'ring-blue-500' // default
+  }
+  
+  const focusRingColor = isKeyboardFocused.value ? getFocusRingColor() : ''
 
   return twMerge(
-    theme.root.base,
-    theme.root.variants[variant],
+    baseWithoutFocus,
+    theme.root.variants[variant].replace(/focus:ring-\w+-\d+/g, ''), // Remove focus ring from variant
     sizeClass,
     theme.root.rounded[rounded],
     widthClass,
+    focusStyles,
+    focusRingColor,
     customClasses,
     // Animation classes
     'relative overflow-hidden transform-gpu transition-all duration-150 ease-out',

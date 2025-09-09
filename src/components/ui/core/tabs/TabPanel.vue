@@ -26,19 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { twMerge } from 'tailwind-merge'
-
-interface TabPanelProps {
-  value: string
-  activeTab: string
-  hasBeenActive?: boolean
-  navigationDirection?: 'forward' | 'backward'
-  orientation?: 'horizontal' | 'vertical'
-  customClasses?: string
-  lazy?: boolean
-  animated?: boolean
-}
+import type { TabPanelProps } from './types'
 
 const {
   value,
@@ -50,8 +40,6 @@ const {
   lazy = false,
   animated = true
 } = defineProps<TabPanelProps>()
-
-// Tab context is now passed as props
 
 // Computed properties
 const isActive = computed(() => activeTab === value)

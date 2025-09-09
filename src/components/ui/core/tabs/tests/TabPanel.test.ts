@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import TabPanel from './TabPanel.vue'
+import TabPanel from '../TabPanel.vue'
 
 describe('TabPanel', () => {
   const defaultProps = {
@@ -32,7 +32,7 @@ describe('TabPanel', () => {
   describe('Basic Rendering', () => {
     it('renders correctly with basic props', () => {
       const wrapper = createWrapper()
-      
+
       expect(wrapper.find('[role="tabpanel"]').exists()).toBe(true)
       expect(wrapper.text()).toBe('Panel Content')
       expect(wrapper.attributes('id')).toBe('panel-panel1')
@@ -46,7 +46,7 @@ describe('TabPanel', () => {
           default: 'Custom Panel Content'
         }
       })
-      
+
       expect(wrapper.text()).toBe('Custom Panel Content')
     })
   })
@@ -128,7 +128,7 @@ describe('TabPanel', () => {
   describe('Accessibility', () => {
     it('has correct ARIA attributes', () => {
       const wrapper = createWrapper()
-      
+
       expect(wrapper.attributes('role')).toBe('tabpanel')
       expect(wrapper.attributes('id')).toBe('panel-panel1')
       expect(wrapper.attributes('aria-labelledby')).toBe('tab-panel1')

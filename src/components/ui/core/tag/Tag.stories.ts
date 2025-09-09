@@ -28,7 +28,7 @@ const ExclamationCircleIcon = markRaw({
 });
 
 const meta: Meta<typeof Tag> = {
-  title: 'UI/Tag',
+  title: 'UI/Misc/Tag',
   component: Tag,
   parameters: {
     layout: 'centered',

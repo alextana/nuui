@@ -21,7 +21,7 @@ const DownloadIcon = markRaw({
 });
 
 const meta = {
-  title: 'UI/Button',
+  title: 'UI/Input/Button',
   component: Button,
   argTypes: {
     variant: {

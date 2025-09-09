@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import TabList from './TabList.vue'
+import TabList from '../TabList.vue'
 
 describe('TabList', () => {
   const createWrapper = (props = {}, slots = {}) => {

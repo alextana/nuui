@@ -1,11 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
-import Tabs from './Tabs.vue'
-import TabGroup from './TabGroup.vue'
-import TabList from './TabList.vue'
-import Tab from './Tab.vue'
-import TabPanel from './TabPanel.vue'
+import Tabs from '../Tabs.vue'
 
 const sampleTabs = [
   {

@@ -19,17 +19,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { twMerge } from 'tailwind-merge'
-import { mergeTabsTheme, type TabsVariant, type TabsSize, type TabsTheme } from './theme'
+import { mergeTabsTheme } from './theme'
+import type { TabGroupProps, TabGroupEmits } from './types'
 
-interface TabGroupProps {
-  modelValue?: string
-  defaultValue?: string
-  variant?: TabsVariant
-  size?: TabsSize
-  orientation?: 'horizontal' | 'vertical'
-  customClasses?: string
-  theme?: TabsTheme
-}
+// TabGroupProps interface is now imported from types.ts
 
 const {
   modelValue,
@@ -41,10 +34,7 @@ const {
   theme
 } = defineProps<TabGroupProps>()
 
-const emit = defineEmits<{
-  'update:modelValue': [value: string]
-  change: [value: string]
-}>()
+const emit = defineEmits<TabGroupEmits>()
 
 // Internal state
 const activeTab = ref(modelValue || defaultValue)
@@ -96,7 +86,7 @@ const setActiveTab = (value: string) => {
 }
 
 // Function to register tab order
-const registerTab = (tabValue: string, tabId: string) => {
+const registerTab = (tabValue: string, _tabId: string) => {
   if (!tabOrder.value.includes(tabValue)) {
     // Add tab to the end using unique ID for ordering
     tabOrder.value.push(tabValue)

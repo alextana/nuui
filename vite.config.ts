@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => ({
         index: path.resolve(__dirname, 'src/index.ts'),
         button: path.resolve(__dirname, 'src/components/ui/core/button/index.ts'),
         tag: path.resolve(__dirname, 'src/components/ui/core/tag/index.ts'),
+        text: path.resolve(__dirname, 'src/components/ui/core/text/index.ts'),
         tabs: path.resolve(__dirname, 'src/components/ui/core/tabs/index.ts')
       },
       name: 'NuUI',
@@ -42,9 +43,10 @@ export default defineConfig(({ mode }) => ({
     vue(), 
     tailwindcss(),
     ...(mode === 'lib' ? [dts({ 
-      insertTypesEntry: true,
-      include: ['src/**/*'],
-      exclude: ['src/**/*.stories.ts', 'src/**/*.test.ts']
+      entryRoot: 'src',
+      outDir: 'dist',
+      include: ['src/index.ts', 'src/types.ts'],
+      exclude: ['src/**/*.stories.ts', 'src/**/*.test.ts', 'src/**/*.spec.ts', 'src/**/tests/**/*', 'src/**/types/**/*']
     })] : [])
   ],
   test: {
