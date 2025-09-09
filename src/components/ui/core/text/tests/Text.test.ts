@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { Text } from './index'
+import { Text } from '../index'
 
 describe('Text', () => {
   it('renders with default props', () => {
@@ -9,7 +9,7 @@ describe('Text', () => {
         children: 'Hello World'
       }
     })
-    
+
     expect(wrapper.text()).toBe('Hello World')
     expect(wrapper.element.tagName).toBe('P')
   })
@@ -21,7 +21,7 @@ describe('Text', () => {
         children: 'Heading'
       }
     })
-    
+
     expect(wrapper.element.tagName).toBe('H1')
     expect(wrapper.text()).toBe('Heading')
   })
@@ -32,7 +32,7 @@ describe('Text', () => {
         default: 'Slot content'
       }
     })
-    
+
     expect(wrapper.text()).toBe('Slot content')
   })
 
@@ -43,7 +43,7 @@ describe('Text', () => {
         children: 'Large heading'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('text-xl')
     expect(wrapper.classes()).toContain('font-semibold')
   })
@@ -55,7 +55,7 @@ describe('Text', () => {
         children: 'Error message'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('text-red-600')
   })
 
@@ -66,7 +66,7 @@ describe('Text', () => {
         children: 'Centered text'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('text-center')
   })
 
@@ -77,7 +77,7 @@ describe('Text', () => {
         children: 'Bold text'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('font-bold')
   })
 
@@ -88,7 +88,7 @@ describe('Text', () => {
         children: 'Strikethrough text'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('line-through')
   })
 
@@ -101,7 +101,7 @@ describe('Text', () => {
         children: 'Utility text'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('break-words')
     expect(wrapper.classes()).toContain('truncate')
     expect(wrapper.classes()).toContain('font-mono')
@@ -115,7 +115,7 @@ describe('Text', () => {
         children: 'Hidden text'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('sr-only')
   })
 
@@ -126,7 +126,7 @@ describe('Text', () => {
         children: 'Custom styled text'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('custom-class')
     expect(wrapper.classes()).toContain('another-class')
   })
@@ -138,13 +138,13 @@ describe('Text', () => {
         children: 'Text with ID'
       }
     })
-    
+
     expect(wrapper.attributes('id')).toBe('test-id')
   })
 
   it('works with different semantic elements', () => {
     const elements = ['span', 'div', 'h1', 'h2', 'h3', 'strong', 'em', 'code'] as const
-    
+
     elements.forEach(element => {
       const wrapper = mount(Text, {
         props: {
@@ -152,7 +152,7 @@ describe('Text', () => {
           children: `${element} content`
         }
       })
-      
+
       expect(wrapper.element.tagName).toBe(element.toUpperCase())
     })
   })
@@ -166,7 +166,7 @@ describe('Text', () => {
         }
       }
     }
-    
+
     const wrapper = mount(Text, {
       props: {
         theme: customTheme,
@@ -174,7 +174,7 @@ describe('Text', () => {
         children: 'Custom themed text'
       }
     })
-    
+
     expect(wrapper.classes()).toContain('custom-base-class')
     expect(wrapper.classes()).toContain('custom-variant-class')
     expect(wrapper.classes()).toContain('font-black')
