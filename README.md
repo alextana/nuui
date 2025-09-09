@@ -1,6 +1,6 @@
 # NuUI
 
-A modern Vue 3 UI component library built with Tailwind CSS.
+A modern Vue 3 UI component library built with Tailwind CSS and TypeScript. Features beautiful animations, comprehensive accessibility support, and flexible theming.
 
 ## Installation
 
@@ -11,21 +11,14 @@ npm install nuui
 pnpm add nuui
 # or
 yarn add nuui
-
-# Install peer dependencies (required)
-npm install tailwindcss @tailwindcss/vite vue
-# or
-pnpm add tailwindcss @tailwindcss/vite vue
-# or
-yarn add tailwindcss @tailwindcss/vite vue
 ```
 
 ### Prerequisites
 
 This library requires:
-- **Vue 3.5+**
-- **Tailwind CSS 4.1+** 
-- **@tailwindcss/vite 4.1+**
+- **Vue 3.3+**
+- **Tailwind CSS 3.0+**
+- **Node.js 18+**
 
 Make sure you have Tailwind CSS configured in your project as NuUI components rely on Tailwind classes for styling.
 
@@ -42,15 +35,28 @@ Make sure you have Tailwind CSS configured in your project as NuUI components re
     </Button>
     
     <!-- Tag component -->
-    <Tag variant="primary" size="sm">
-      New
+    <Tag variant="success" size="sm">
+      New Feature
     </Tag>
+    
+    <!-- Tabs component -->
+    <Tabs v-model="activeTab" variant="default">
+      <TabList>
+        <Tab value="tab1">Tab 1</Tab>
+        <Tab value="tab2">Tab 2</Tab>
+      </TabList>
+      <TabPanel value="tab1">Content 1</TabPanel>
+      <TabPanel value="tab2">Content 2</TabPanel>
+    </Tabs>
   </div>
 </template>
 
 <script setup>
-import { Button, Tag } from 'nuui';
-import 'nuui/style.css';
+import { ref } from 'vue'
+import { Button, Tag, Tabs, TabList, Tab, TabPanel } from 'nuui'
+import 'nuui/style.css'
+
+const activeTab = ref('tab1')
 </script>
 ```
 
@@ -66,23 +72,46 @@ import 'nuui/style.css';
 </template>
 
 <script setup>
-import Button from 'nuui/button';
-import 'nuui/style.css';
+import Button from 'nuui/button'
+import 'nuui/style.css'
 </script>
 ```
 
 ```vue
 <template>
   <div>
-    <Tag variant="primary" size="sm">
-      New
+    <Tag variant="warning" size="md">
+      Important
     </Tag>
   </div>
 </template>
 
 <script setup>
-import Tag from 'nuui/tag';
-import 'nuui/style.css';
+import Tag from 'nuui/tag'
+import 'nuui/style.css'
+</script>
+```
+
+```vue
+<template>
+  <div>
+    <Tabs v-model="activeTab">
+      <TabList>
+        <Tab value="home">Home</Tab>
+        <Tab value="about">About</Tab>
+      </TabList>
+      <TabPanel value="home">Home content</TabPanel>
+      <TabPanel value="about">About content</TabPanel>
+    </Tabs>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { Tabs, TabList, Tab, TabPanel } from 'nuui/tabs'
+import 'nuui/style.css'
+
+const activeTab = ref('home')
 </script>
 ```
 
@@ -98,9 +127,11 @@ import 'nuui/style.css';
 ```javascript
 import { 
   buttonTheme, 
-  tagTheme, 
+  tagTheme,
+  tabsTheme,
   mergeButtonTheme, 
-  mergeTagTheme 
+  mergeTagTheme,
+  mergeTabsTheme 
 } from 'nuui'
 
 // Customize themes
@@ -111,6 +142,14 @@ const customButtonTheme = mergeButtonTheme({
     }
   }
 })
+
+const customTabsTheme = mergeTabsTheme({
+  tabList: {
+    variants: {
+      custom: 'bg-gray-100 rounded-lg p-1'
+    }
+  }
+})
 ```
 
 ## Components
@@ -118,12 +157,21 @@ const customButtonTheme = mergeButtonTheme({
 ### Button
 - **Variants**: primary, secondary, tertiary, danger, success, warning
 - **Sizes**: xs, sm, md, lg, xl
-- **Features**: Loading states, icon support, disabled states
+- **Features**: Loading states, icon support, disabled states, click animations, ripple effects
+- **Accessibility**: Full keyboard navigation, ARIA attributes, screen reader support
 
 ### Tag
 - **Variants**: default, success, info, warning, danger, pending
 - **Sizes**: xs, sm, md, lg, xl
 - **Features**: Clickable/static modes, icon support, accessibility
+
+### Tabs
+- **Variants**: default, pills, underline, enclosed
+- **Sizes**: sm, md, lg
+- **Orientations**: horizontal, vertical
+- **Features**: Keyboard navigation (arrow keys, Home, End), smooth animations, lazy loading, customizable transitions
+- **Components**: `Tabs` (container), `TabList` (tab navigation), `Tab` (individual tab), `TabPanel` (content panel)
+- **Accessibility**: Full ARIA support, focus management, screen reader announcements
 
 ## Development
 

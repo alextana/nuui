@@ -92,7 +92,7 @@ const transitionName = computed(() => {
 const panelClasses = computed(() => {
   const theme = {
     tabPanel: {
-      base: 'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
+      base: 'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500',
       variants: {
         default: 'p-4'
       }

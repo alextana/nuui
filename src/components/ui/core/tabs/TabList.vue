@@ -6,28 +6,21 @@
     :aria-orientation="orientation"
     @keydown="handleKeydown"
   >
-    <!-- Animated indicator -->
     <div
       v-if="showIndicator"
       :class="indicatorClasses"
       :style="indicatorStyle"
-    ></div>
-
+    />
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, onMounted, watch, provide } from 'vue'
-import { twMerge } from 'tailwind-merge'
-import { mergeTabsTheme, type TabsVariant, type TabsSize, type TabsTheme } from './theme'
-
-// Template refs
-const tabListRef = ref<HTMLElement>()
-
-// Indicator state
-const indicatorStyle = ref({})
-const showIndicator = ref(false)
+import { ref, toRef, onMounted, onUnmounted, watch } from 'vue'
+import type { TabsVariant, TabsSize, TabsTheme } from './theme'
+import { useTabIndicator } from './composables/useTabIndicator'
+import { useTabKeyboardNavigation } from './composables/useTabKeyboardNavigation'
+import { useTabListTheme } from './composables/useTabListTheme'
 
 interface TabListProps {
   activeTab: string
@@ -38,8 +31,6 @@ interface TabListProps {
   customClasses?: string
   theme?: TabsTheme
   animated?: boolean
-  registerTab?: (tabValue: string, tabId: string) => void
-  unregisterTab?: (tabValue: string) => void
 }
 
 const {
@@ -51,191 +42,71 @@ const {
   customClasses = '',
   theme,
   animated = true,
-  registerTab,
-  unregisterTab
 } = defineProps<TabListProps>()
 
-// Merge custom theme with default theme
-const mergedTheme = computed(() => mergeTabsTheme(theme))
+// Template refs
+const tabListRef = ref<HTMLElement>()
 
-// Computed classes
-const tabListClasses = computed(() => {
-  const themeConfig = mergedTheme.value
-  const orientationClass = orientation === 'vertical' ? 'flex-col border-r border-b-0' : ''
+// Convert props to refs for composables
+const variantRef = toRef(() => variant)
+const sizeRef = toRef(() => size)
+const orientationRef = toRef(() => orientation)
+const customClassesRef = toRef(() => customClasses)
+const animatedRef = toRef(() => animated)
+const activeTabRef = toRef(() => activeTab)
+const themeRef = toRef(() => theme)
 
-  return twMerge(
-    'relative',
-    themeConfig.tabList.base,
-    themeConfig.tabList.variants[variant],
-    themeConfig.tabList.sizes[size],
-    orientationClass,
-    'relative', // Ensure relative positioning for indicator
-    customClasses
-  )
+// Use composables
+const { tabListClasses } = useTabListTheme({
+  variant: variantRef,
+  size: sizeRef,
+  orientation: orientationRef,
+  customClasses: customClassesRef,
+  theme: themeRef
 })
 
-// Indicator classes
-const indicatorClasses = computed(() => {
-  const baseClasses = animated
-    ? 'absolute transition-all duration-300 ease-in-out pointer-events-none'
-    : 'absolute pointer-events-none'
-
-  if (variant === 'underline') {
-    return twMerge(
-      baseClasses,
-      'bg-blue-600',
-      orientation === 'vertical' ? 'left-0 w-1 h-auto' : 'bottom-0 h-1'
-    )
-  }
-
-  return twMerge(
-    baseClasses,
-    'bg-primary/10 rounded-md backdrop-blur-sm'
-  )
+const {
+  indicatorStyle,
+  showIndicator,
+  indicatorClasses,
+  updateIndicator
+} = useTabIndicator({
+  variant: variantRef,
+  orientation: orientationRef,
+  animated: animatedRef,
 })
 
-// Update indicator position
-const updateIndicator = async () => {
-  await nextTick()
+const { handleKeydown } = useTabKeyboardNavigation({
+  orientation: orientationRef,
+  setActiveTab
+})
 
-  if (!tabListRef.value) return
+// Event listener management
+let resizeCleanup: (() => void) | null = null
 
-  const activeTabElement = tabListRef.value.querySelector('[role="tab"][aria-selected="true"]') as HTMLElement
+const handleResize = () => updateIndicator(tabListRef.value || null)
 
-  if (!activeTabElement) {
-    showIndicator.value = false
-    return
-  }
+// Lifecycle hooks
+onMounted(() => {
+  updateIndicator(tabListRef.value || null)
 
-  const tabListRect = tabListRef.value.getBoundingClientRect()
-  const activeTabRect = activeTabElement.getBoundingClientRect()
+  // Add resize listener
+  window.addEventListener('resize', handleResize)
+  resizeCleanup = () => window.removeEventListener('resize', handleResize)
+})
 
-  const left = activeTabRect.left - tabListRect.left
-  const top = activeTabRect.top - tabListRect.top
-  const width = activeTabRect.width
-  const height = activeTabRect.height
+onUnmounted(() => {
+  resizeCleanup?.()
+})
 
-  if (variant === 'underline') {
-    if (orientation === 'vertical') {
-      indicatorStyle.value = {
-        top: `${top}px`,
-        left: '0px',
-        width: '6px',
-        height: `${height}px`
-      }
-    } else {
-      indicatorStyle.value = {
-        left: `${left}px`,
-        bottom: '0px',
-        width: `${width}px`,
-        height: '4px'
-      }
-    }
-  } else {
-    indicatorStyle.value = {
-      left: `${left}px`,
-      top: `${top}px`,
-      width: `${width}px`,
-      height: `${height}px`
-    }
-  }
-
-  showIndicator.value = true
-}
-
-// Active tab management is now passed as props
-
-// Keyboard navigation handler
-const handleKeydown = async (event: KeyboardEvent) => {
-  const { key } = event
-
-  // Only handle arrow keys
-  if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
-    return
-  }
-
-  event.preventDefault()
-
-  // Get all tab elements within this TabList
-  await nextTick()
-  const currentTarget = event.currentTarget as HTMLElement
-  if (!currentTarget) return
-
-  const tabElements = Array.from(
-    currentTarget.querySelectorAll('[role="tab"]:not([disabled])') as NodeListOf<HTMLElement>
-  )
-
-  if (tabElements.length === 0) return
-
-  const currentIndex = tabElements.findIndex(tab => tab.getAttribute('aria-selected') === 'true')
-  let nextIndex = currentIndex
-
-  // Determine next index based on key and orientation
-  if (orientation === 'horizontal') {
-    if (key === 'ArrowLeft') {
-      nextIndex = currentIndex > 0 ? currentIndex - 1 : tabElements.length - 1
-    } else if (key === 'ArrowRight') {
-      nextIndex = currentIndex < tabElements.length - 1 ? currentIndex + 1 : 0
-    }
-  } else {
-    if (key === 'ArrowUp') {
-      nextIndex = currentIndex > 0 ? currentIndex - 1 : tabElements.length - 1
-    } else if (key === 'ArrowDown') {
-      nextIndex = currentIndex < tabElements.length - 1 ? currentIndex + 1 : 0
-    }
-  }
-
-  // Handle Home and End keys
-  if (key === 'Home') {
-    nextIndex = 0
-  } else if (key === 'End') {
-    nextIndex = tabElements.length - 1
-  }
-
-  // Focus and activate the next tab
-  if (nextIndex !== currentIndex && tabElements[nextIndex]) {
-    const nextTab = tabElements[nextIndex]
-    const tabValue = nextTab.getAttribute('id')?.replace('tab-', '') || ''
-
-    // Set focus and activate
-    nextTab.focus()
-    if (tabValue) {
-      setActiveTab(tabValue)
-    }
-  }
-}
-
-// Watch for active tab changes to update indicator
 watch(
-  () => activeTab,
-  () => updateIndicator(),
+  activeTabRef,
+  () => updateIndicator(tabListRef.value || null),
   { flush: 'post' }
 )
 
-// Update indicator on mount and when variant changes
-onMounted(() => {
-  updateIndicator()
-
-  // Also update on window resize
-  const handleResize = () => updateIndicator()
-  window.addEventListener('resize', handleResize)
-
-  // Cleanup on unmount
-  return () => {
-    window.removeEventListener('resize', handleResize)
-  }
-})
-
-watch([() => variant, () => orientation], () => {
-  updateIndicator()
-})
-
-// Provide context to child Tab components
-provide('tabsContext', {
-  variant,
-  size,
-  orientation,
-  theme: mergedTheme,
-  animated
-})
+watch(
+  [variantRef, orientationRef],
+  () => updateIndicator(tabListRef.value || null)
+)
 </script>

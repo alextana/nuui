@@ -187,8 +187,6 @@ describe('TabList', () => {
 
       // Base classes from theme
       expect(classes).toContain('flex')
-      // Note: border-b and border-gray-200 come from base theme
-      // but may be overridden by variant classes
 
       // Variant classes (pills)
       expect(classes).toContain('border-none')
