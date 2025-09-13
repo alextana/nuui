@@ -25,6 +25,3 @@ dist-ssr
 
 *storybook.log
 storybook-static
-
-# Stryker mutation testing temporary files
-stryker-tmp
